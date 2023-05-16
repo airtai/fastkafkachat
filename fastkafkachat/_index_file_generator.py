@@ -7,10 +7,9 @@ __all__ = ['index_website_data']
 from typing import *
 
 import typer
-from llama_index.readers.schema.base import Document
-from llama_index import download_loader, GPTSimpleVectorIndex
+from llama_index import download_loader, GPTVectorStoreIndex
 
-from ._helper import get_all_links_from_website, get_service_context, write_compressed_json, extract_latest_doc_urls
+from ._helper import get_all_links_from_website, get_service_context, extract_latest_doc_urls, zip_index_files
 
 # %% ../nbs/CLI_Index_File_Generator.ipynb 4
 def _index_website_data(
@@ -33,10 +32,13 @@ def _index_website_data(
     documents = loader.load_data(urls=latest_docs_urls)
 
     service_context = get_service_context()
-    index = GPTSimpleVectorIndex.from_documents(
+    index = GPTVectorStoreIndex.from_documents(
         documents, service_context=service_context
     )
-    write_compressed_json(index.save_to_string(), f"{data_dir}/website_index.json")
+#     write_compressed_json(index.save_to_string(), f"{data_dir}/website_index.json")
+    index.storage_context.persist(data_dir)
+    zip_index_files(data_dir)
+    
     typer.echo("\nIndexing successfully completed.")
 
 # %% ../nbs/CLI_Index_File_Generator.ipynb 6
