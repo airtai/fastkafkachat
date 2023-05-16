@@ -17,11 +17,11 @@ from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
 )
-from llama_index import GPTSimpleVectorIndex
+from llama_index import GPTVectorStoreIndex, StorageContext, load_index_from_storage
 from llama_index.prompts.chat_prompts import CHAT_REFINE_PROMPT
 from llama_index.prompts.prompts import QuestionAnswerPrompt, RefinePrompt
 from llama_index.response.schema import Response, StreamingResponse
-from ._helper import get_service_context, load_compressed_json
+from ._helper import get_service_context, unzip_index_files
 
 # %% ../nbs/Chat_Generator.ipynb 3
 DEFAULT_TEXT_QA_PROMPT_TMPL = (
@@ -58,30 +58,40 @@ REFINE_TEMPLATE = RefinePrompt(
 )
 
 # %% ../nbs/Chat_Generator.ipynb 5
-def _get_response_from_model(query_str: str, data_dir: str = "./data") -> Union[Response, StreamingResponse]:
+def _get_response_from_model(
+    query_str: str, data_dir: str = "./data"
+) -> Union[Response, StreamingResponse]:
     service_context = get_service_context()
-    index_json_string = load_compressed_json(f"{data_dir}/website_index.json.gz")
-    index = GPTSimpleVectorIndex.load_from_string(index_json_string, service_context=service_context)
-    
-    response = index.query(
-        query_str=query_str,
+    if not all(
+        [
+            Path(f"{data_dir}/{file}").exists()
+            for file in ["docstore.json", "index_store.json", "vector_store.json"]
+        ]
+    ):
+        unzip_index_files(f"{data_dir}/website_index.zip")
+
+    storage_context = StorageContext.from_defaults(persist_dir=data_dir)
+    index = load_index_from_storage(storage_context, service_context=service_context)
+    query_engine = index.as_query_engine(
         service_context=service_context,
         similarity_top_k=3,
         response_mode="compact",
-        text_qa_template=TEXT_QA_TEMPLATE, 
-        refine_template=REFINE_TEMPLATE
+        text_qa_template=TEXT_QA_TEMPLATE,
+        refine_template=REFINE_TEMPLATE,
     )
+
+    response = query_engine.query(query_str)
     return response
 
-# %% ../nbs/Chat_Generator.ipynb 7
+# %% ../nbs/Chat_Generator.ipynb 8
 router = APIRouter()
 
 
-# %% ../nbs/Chat_Generator.ipynb 8
+# %% ../nbs/Chat_Generator.ipynb 9
 class GenerateChatRequest(BaseModel):
     query_str: str
 
-# %% ../nbs/Chat_Generator.ipynb 9
+# %% ../nbs/Chat_Generator.ipynb 10
 @router.post("/")
 def generate_chat_response(
     generate_chat_response_request: GenerateChatRequest,
