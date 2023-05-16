@@ -21,14 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install quarto
-          shell: bash
-          run: |
-            wget -q https://www.quarto.org/download/latest/quarto-linux-amd64.deb
-            sudo dpkg -i quarto-linux-amd64.deb
+        shell: bash
+        run: |
+          wget -q https://www.quarto.org/download/latest/quarto-linux-amd64.deb
+          sudo dpkg -i quarto-linux-amd64.deb
       - uses: fastai/workflows/nbdev-ci@master
         with:
           version: "3.9"
       - name: Test client build
-          shell: bash
-          run: |
-            cd client && npm install && npm run build
+        shell: bash
+        run: |
+          cd client && npm install && npm run build
