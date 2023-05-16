@@ -6,7 +6,6 @@ __all__ = ['get_all_links_from_website', 'extract_latest_doc_urls', 'get_service
 # %% ../nbs/Helper.ipynb 1
 from pathlib import Path
 from typing import *
-import gzip
 import logging
 from urllib.request import Request, urlopen
 from urllib.parse import urlparse, urljoin
@@ -18,8 +17,6 @@ import glob
 from bs4 import BeautifulSoup
 from langchain.chat_models import ChatOpenAI
 from llama_index import (
-    GPTVectorStoreIndex,
-    SimpleDirectoryReader,
     LLMPredictor,
     ServiceContext,
 )

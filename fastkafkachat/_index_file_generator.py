@@ -7,7 +7,6 @@ __all__ = ['index_website_data']
 from typing import *
 
 import typer
-from llama_index.readers.schema.base import Document
 from llama_index import download_loader, GPTVectorStoreIndex
 
 from ._helper import get_all_links_from_website, get_service_context, extract_latest_doc_urls, zip_index_files

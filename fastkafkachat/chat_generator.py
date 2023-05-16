@@ -17,7 +17,7 @@ from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
 )
-from llama_index import GPTVectorStoreIndex, StorageContext, load_index_from_storage
+from llama_index import StorageContext, load_index_from_storage
 from llama_index.prompts.chat_prompts import CHAT_REFINE_PROMPT
 from llama_index.prompts.prompts import QuestionAnswerPrompt, RefinePrompt
 from llama_index.response.schema import Response, StreamingResponse

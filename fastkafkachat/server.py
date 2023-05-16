@@ -10,12 +10,11 @@ from os import environ
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastcore.imports import in_notebook, in_ipython
 import uvicorn
 
 from . import chat_generator
 
-# %% ../nbs/API_Web_Service.ipynb 2
+# %% ../nbs/API_Web_Service.ipynb 3
 def create_fastapi_app(
     public_path: Path = Path("../client/build")
 ) -> FastAPI:
@@ -37,7 +36,7 @@ def create_fastapi_app(
     app.mount("/", StaticFiles(directory=public_path, html = True), name="public")
     return app
 
-# %% ../nbs/API_Web_Service.ipynb 4
+# %% ../nbs/API_Web_Service.ipynb 5
 def run_webserver(public_path: str) -> None:
     """Runs a webserver
 
