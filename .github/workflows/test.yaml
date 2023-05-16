@@ -20,24 +20,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Install quarto
+        shell: bash
+        run: |
+          wget -q https://www.quarto.org/download/latest/quarto-linux-amd64.deb
+          sudo dpkg -i quarto-linux-amd64.deb
+      - uses: fastai/workflows/nbdev-ci@master
         with:
-          python-version: "3.9"
-          cache: "pip"
-          cache-dependency-path: settings.ini
-
-      - name: Install Dependencies
+          version: "3.9"
+      - name: Test client build
         shell: bash
         run: |
-          set -ux
-          python -m pip install --upgrade pip
-          pip install -Uq nbdev
-          nbdev_install_quarto
-          test -f setup.py && pip install -e ".[dev]"
           cd client && npm install && npm run build
-
-      - name: Run Tests
-        shell: bash
-        run: |
-          nbdev_test
