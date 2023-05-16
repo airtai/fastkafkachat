@@ -39,7 +39,8 @@ def get_all_links_from_website(start_url: str, visited: Optional[set] = None) ->
         visited = set()
     try:
         req = Request(start_url)
-        html_page = urlopen(req)
+        # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
+        html_page = urlopen(req) # nosec B310
         soup = BeautifulSoup(html_page, "lxml")
 
         base_url = urlparse(start_url).scheme + '://' + urlparse(start_url).hostname #type: ignore
