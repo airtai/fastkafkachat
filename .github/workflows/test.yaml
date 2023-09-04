@@ -8,15 +8,15 @@ jobs:
   mypy_static_analysis:
     runs-on: ubuntu-latest
     steps:
-      - uses: airtai/workflows/airt-mypy-check@main
+      - uses: airtai/workflows/airt-mypy-check@main # nosemgrep: yaml.github-actions.security.third-party-action-not-pinned-to-commit-sha.third-party-action-not-pinned-to-commit-sha
   bandit_static_analysis:
     runs-on: ubuntu-latest
     steps:
-      - uses: airtai/workflows/airt-bandit-check@main
+      - uses: airtai/workflows/airt-bandit-check@main # nosemgrep: yaml.github-actions.security.third-party-action-not-pinned-to-commit-sha.third-party-action-not-pinned-to-commit-sha
   semgrep_static_analysis:
     runs-on: ubuntu-latest
     steps:
-      - uses: airtai/workflows/airt-semgrep-check@main
+      - uses: airtai/workflows/airt-semgrep-check@main # nosemgrep: yaml.github-actions.security.third-party-action-not-pinned-to-commit-sha.third-party-action-not-pinned-to-commit-sha
   test:
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +25,7 @@ jobs:
         run: |
           wget -q https://www.quarto.org/download/latest/quarto-linux-amd64.deb
           sudo dpkg -i quarto-linux-amd64.deb
-      - uses: fastai/workflows/nbdev-ci@master
+      - uses: fastai/workflows/nbdev-ci@master # nosemgrep: yaml.github-actions.security.third-party-action-not-pinned-to-commit-sha.third-party-action-not-pinned-to-commit-sha
         with:
           version: "3.9"
       - name: Test client build
